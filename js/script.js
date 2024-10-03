@@ -10,6 +10,7 @@ function tooth_part(tooth_id, side_id, w, h, fill_numero) {
     svg.style.viewBox = `0 0 ${w} ${h}`;
     svg.style.width = w;
     svg.style.height = h;
+    svg.style.position = "absolute";
 
     svg.style.fill = get_fill(fill_numero);
     svg.style.stroke = "black";
@@ -20,9 +21,11 @@ function tooth_part(tooth_id, side_id, w, h, fill_numero) {
             break;
         case 1:
             svg.innerHTML = br_path;
+            svg.style.right = 0;
             break;
         case 2:
             svg.innerHTML = bb_path;
+            svg.style.bottom = 0;
             break;
         case 3:
             svg.innerHTML = bl_path;
@@ -79,6 +82,10 @@ function back_tooth(tooth_id) {
         size = get_wh(side_id);
         div.appendChild(tooth_part(tooth_id, side_id, size[0], size[1], 0));
     }
+    div.style.position = "relative";
+    div.style.width = "48px";
+    div.style.height = "48px";
+    console.log(div.style);
     return div;
 }
 
