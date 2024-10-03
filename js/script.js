@@ -1,43 +1,47 @@
-function back_top(fill, id) {
-    return `<svg
-    viewBox="0 0 48 12"
-    width="48"
-    height="12"
-    fill=${fill}
-    stroke="black"
-    onclick=""
-    data-num=${id}
-    xmlns="http://www.w3.org/2000/svg"
->
-    <path
-        d="
-        M 0 0
-        h 48 
-        l -12 12
-        h -24 z
-        "
-    ></path>
-</svg>`;
+/** @param {int} fill_numero
+ * @param {int} tooth_id
+ */
+function tooth_part(tooth_id, side_id, w, h, fill_numero) {
+    svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+
+    svg.dataset.tooth = tooth_id;
+    svg.dataset.side = side_id;
+
+    svg.style.viewBox = `0 0 ${w} ${h}`;
+    svg.style.width = w;
+    svg.style.height = h;
+
+    svg.style.fill = get_fill(fill_numero);
+    svg.style.stroke = "black";
+
+    switch (side_id) {
+        case 0:
+            svg.innerHTML = bt_path;
+            break;
+        case 1:
+            svg.innerHTML = br_path;
+            break;
+        case 2:
+            svg.innerHTML = bb_path;
+            break;
+        case 3:
+            svg.innerHTML = bl_path;
+            break;
+    }
+    return svg;
 }
 
-function back_left() {
-    return `<svg></svg>`;
-}
-function back_tooth() {
-    return back_top("red", 32) + back_left();
-}
+// TODO: make transparent 0 element
+fill_config = ["red", "blue", "#0055ff"];
 
-function fillWithColor(element) {
-    element.classList.toggle(fill_color[drawing_state]);
+function get_fill(i) {
+    return fill_config[i];
 }
 
-/** @type ?int */
-let drawing_state = null;
-
-const fill_color = [
-    "bg-red-500",
-    "bg-blue-500",
-];
+const bt_path = `<path d=" M 0 0 h 48 l -12 12 h -24 z "></path>`;
+const bl_path = `<path d=" M 0 0 v 48 l 12 -12 v -24 z " ></path>`;
+const bb_path = `<path d=" M 0 12 h 48 l -12 -12 h -24 z " ></path>`;
+const br_path = `<path d=" M 12 0 v 48 l -12 -12 v -24 z "></path>`;
 
 /** @param {int} state */
 function setFillState(state) {
@@ -46,13 +50,43 @@ function setFillState(state) {
 
 self.onload = function () {
     console.log("we ball");
-    document.body.innerHTML += back_tooth();
+    document.body.appendChild(back_tooth(32));
 };
 
-function get_number_attribute(event) {
-    return parseInt(event.target.parentElement.getAttribute("data-num"));
+function get_wh(i) {
+    let w = 0;
+    let h = 0;
+
+    switch (i) {
+        case 0:
+        case 2:
+            w = 48;
+            h = 12;
+            break;
+        case 1:
+        case 3:
+            w = 12;
+            h = 48;
+            break;
+    }
+
+    return [w, h];
+}
+
+function back_tooth(tooth_id) {
+    div = document.createElement("div");
+    for (let side_id = 0; side_id < 4; ++side_id) {
+        size = get_wh(side_id);
+        div.appendChild(tooth_part(tooth_id, side_id, size[0], size[1], 0));
+    }
+    return div;
+}
+
+function get_number_attribute(event, attr) {
+    return parseInt(event.target.parentElement.getAttribute(attr));
 }
 
 self.addEventListener("click", (event) => {
-    console.log(get_number_attribute(event));
+    console.log(get_number_attribute(event, "data-tooth"));
+    console.log(get_number_attribute(event, "data-side"));
 });
