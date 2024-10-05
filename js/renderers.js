@@ -1,3 +1,4 @@
+import { get_fill } from "./helpers.js";
 back_path = [
     [`<path d=" M 0 0 h 48 l -12 12 h -24 z "></path>`, [48, 12]],
     [`<path d=" M 12 0 v 48 l -12 -12 v -24 z "></path>`, [12, 48]],
@@ -27,7 +28,7 @@ function render_tooth(half_row, min, cmp, inc, path, total_count) {
     }
 }
 
-function render_adult_teeth() {
+export default function render_adult_teeth() {
     for (let part = 1; part <= 4; part += 1) {
         const half_row = document.createElement("div");
         half_row.style.display = "flex";
@@ -72,6 +73,7 @@ function render_adult_teeth() {
                 (i) => {
                     return i <= row + 8;
                 },
+                1,
                 back_path,
                 4,
             );
@@ -81,17 +83,17 @@ function render_adult_teeth() {
 }
 
 function build_tooth(tooth_id, path, total_parts) {
-    div = document.createelement("div");
+    div = document.createElement("div");
     for (let part_id = 0; part_id < total_parts; ++part_id) {
         part_type = path[part_id];
         size = part_type[1];
-        div.appendchild(
+        div.appendChild(
             tooth_part(
                 tooth_id,
                 part_id,
                 size[0],
                 size[1],
-                drawing_state,
+                0,
                 part_type[0],
             ),
         );
@@ -100,4 +102,41 @@ function build_tooth(tooth_id, path, total_parts) {
     div.style.width = "48px";
     div.style.height = "48px";
     return div;
+}
+
+function tooth_part(tooth_id, side_id, w, h, fill_numero, path) {
+    svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+
+    svg.dataset.tooth = tooth_id;
+    svg.dataset.side = side_id;
+
+    svg.style.viewBox = `0 0 ${w} ${h}`;
+    svg.style.width = w;
+    svg.style.height = h;
+    svg.style.position = "absolute";
+
+    svg.style.fill = get_fill(fill_numero);
+    svg.style.stroke = "black";
+    svg.innerHTML = path;
+
+    switch (side_id) {
+        case 0:
+        case 3:
+            break;
+        case 1:
+            svg.style.right = 0;
+            break;
+        case 2:
+            svg.style.bottom = 0;
+            break;
+        case 4:
+            svg.style.top = "12px";
+            svg.style.left = "12px";
+            break;
+        case 5:
+            svg.style.top = "12px";
+            svg.style.left = "24px";
+            break;
+    }
+    return svg;
 }
