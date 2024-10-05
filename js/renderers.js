@@ -1,5 +1,5 @@
-import { get_fill } from "./helpers.js";
-back_path = [
+import { fill_color, global_state, set_global_state } from "./state_manager.js";
+const back_path = [
     [`<path d=" M 0 0 h 48 l -12 12 h -24 z "></path>`, [48, 12]],
     [`<path d=" M 12 0 v 48 l -12 -12 v -24 z "></path>`, [12, 48]],
     [`<path d=" M 0 12 h 48 l -12 -12 h -24 z " ></path>`, [48, 12]],
@@ -8,7 +8,7 @@ back_path = [
     [`<path d=" M 0 0 h 12 v 24 h -12 z " ></path>`, [12, 24]],
 ];
 
-front_path = [
+const front_path = [
     [`<path d=" M 0 0 h 48 l -12 24 h -24 z " ></path> `, [48, 24]],
     [`<path d=" M 12 0 v 48 l -12 -24 z " ></path>`, [12, 48]],
     [`<path d=" M 0 24 h 48 l -12 -24 h -24 z"></path>`, [48, 24]],
@@ -17,11 +17,11 @@ front_path = [
 
 function render_tooth(half_row, min, cmp, inc, path, total_count) {
     for (let i = min; cmp(i); i += inc) {
-        tooth = document.createElement("div");
+        const tooth = document.createElement("div");
         tooth.style.display = "flex";
         tooth.style.flexDirection = "column";
         tooth.appendChild(build_tooth(i, path, total_count));
-        p = document.createElement("p");
+        const p = document.createElement("p");
         p.innerHTML = i;
         tooth.appendChild(p);
         half_row.appendChild(tooth);
@@ -75,25 +75,25 @@ export default function render_adult_teeth() {
                 },
                 1,
                 back_path,
-                4,
+                6,
             );
         }
         document.body.appendChild(half_row);
     }
 }
 
-function build_tooth(tooth_id, path, total_parts) {
-    div = document.createElement("div");
+export function build_tooth(tooth_id, path, total_parts) {
+    const div = document.createElement("div");
     for (let part_id = 0; part_id < total_parts; ++part_id) {
-        part_type = path[part_id];
-        size = part_type[1];
+        const part_type = path[part_id];
+        const size = part_type[1];
         div.appendChild(
-            tooth_part(
+            build_tooth_part(
                 tooth_id,
                 part_id,
                 size[0],
                 size[1],
-                0,
+                global_state[tooth_id][part_id],
                 part_type[0],
             ),
         );
@@ -104,18 +104,30 @@ function build_tooth(tooth_id, path, total_parts) {
     return div;
 }
 
-function tooth_part(tooth_id, side_id, w, h, fill_numero, path) {
-    svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+export function build_tooth_part(tooth_id, side_id, w, h, fill, path) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
     svg.dataset.tooth = tooth_id;
     svg.dataset.side = side_id;
+
+    svg.addEventListener("click", (e) => {
+        s = e.target.parentElement;
+        tid = s.dataset.tooth;
+        sid = s.dataset.side;
+        if (tid !== undefined && sid !== undefined) {
+            s.style.fill = fill_color;
+            const temp_state = global_state;
+            temp_state[tid][sid] = fill_color;
+            set_global_state(temp_state);
+        }
+    });
 
     svg.style.viewBox = `0 0 ${w} ${h}`;
     svg.style.width = w;
     svg.style.height = h;
     svg.style.position = "absolute";
 
-    svg.style.fill = get_fill(fill_numero);
+    svg.style.fill = fill;
     svg.style.stroke = "black";
     svg.innerHTML = path;
 
