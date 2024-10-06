@@ -17,7 +17,7 @@ const front_path = [
 
 const root_tops = [];
 
-function front_top_central() {
+function front_bottom_central() {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.style.stroke = "black";
     path.style.fill = "none";
@@ -32,20 +32,59 @@ function front_top_central() {
     return path;
 }
 
-function single_root() {
+function fang() {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.style.stroke = "black";
     path.style.fill = "none";
     path.setAttribute(
         "d",
-        `M 15.239 24.249 C 19.189 26.806 10.986 62.036 15.239 63.378 C 19.194
-        62.1 32.663 36.131 30.164 23.075 C 29.331 25.991 15.212 24.918 15.239
-        24.249 Z`,
+        `M 11.551 6.075 C 9.988
+4.065 25.399 -5.764 33.522 5.416 C 38.336 5.948 37.355 21.691 33.029 22.35 C
+34.005 26.598 15.053 30.778 11.575 21.818 C 6.263 19.49 8.516 6.313 11.551
+6.075 Z`,
     );
     return path;
 }
 
-function root_canal_left() {
+// root bottom central
+const rbc_directions =
+    `M 15.239 24.249 C 19.189 26.806 10.986 62.036 15.239 63.378 C 19.194
+        62.1 32.663 36.131 30.164 23.075 C 29.331 25.991 15.212 24.918 15.239
+        24.249 Z`;
+
+// root fang
+const rf_directions = `M 12.41 23.239 C 11.141
+26.336 10.819 73.956 17.461 75.298 C 21.416 76.323 34.673 36.888 33.194 23.075
+C 31.954 28.486 11.725 27.308 12.41 23.239 Z`;
+
+function single_root(directions) {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = "none";
+    path.setAttribute(
+        "d",
+        directions,
+    );
+    return path;
+}
+
+function fang_canal() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = fill_color;
+    path.setAttribute(
+        "d",
+        `M 18.588 27.027 L 25.659 27.431 C 25.65 30.381
+18.808 75.126 17.577 73.495 C 16.346 71.864 18.79 27.229 18.588 27.027
+Z`,
+    );
+    path.addEventListener("click", (event) => {
+        event.target.replaceWith(single_canal());
+    });
+    return path;
+}
+
+function single_canal() {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.style.stroke = "black";
     path.style.fill = fill_color;
@@ -56,30 +95,72 @@ function root_canal_left() {
         25.209 21.416 25.007 Z`,
     );
     path.addEventListener("click", (event) => {
-        event.target.replaceWith(root_canal_left());
+        event.target.replaceWith(single_canal());
     });
     return path;
 }
 
-export function root() {
+/** @param {Boolean} mirror */
+export function side_view(tid, scale_x, scale_y) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.viewBox = "0 0 48 90";
     svg.style.width = "48px";
     svg.style.height = "90px";
-    svg.appendChild(front_top_central());
-    svg.appendChild(single_root());
-    svg.appendChild(root_canal_left());
+    // Create a group with transform for mirroring
+    const group = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g",
+    );
+
+    tx = scale_x === -1 ? 48 : 0;
+    ty = scale_y === -1 ? 90 : 0;
+
+    group.setAttribute(
+        "transform",
+        `translate(${tx},${ty}) scale(${scale_x}, ${scale_y})`,
+    );
+    if (tid % 10 == 3) {
+        group.appendChild(fang());
+        group.appendChild(single_root(rf_directions));
+        group.appendChild(fang_canal());
+    } else {
+        group.appendChild(front_bottom_central());
+        group.appendChild(single_root(rbc_directions));
+        group.appendChild(single_canal());
+    }
+    svg.appendChild(group);
     return svg;
 }
+
 function render_tooth(half_row, min, cmp, inc, path, total_count) {
     for (let i = min; cmp(i); i += inc) {
         const tooth = document.createElement("div");
         tooth.style.display = "flex";
         tooth.style.flexDirection = "column";
-        tooth.appendChild(build_tooth(i, path, total_count));
-        const p = document.createElement("p");
-        p.innerHTML = i;
-        tooth.appendChild(p);
+        let scale_x = 1;
+        let scale_y = 1;
+        if (i < 30) {
+            scale_y = -1;
+            if (i > 20) {
+                scale_x = -1;
+            }
+            tooth.appendChild(side_view(i, scale_x, scale_y));
+            tooth.appendChild(build_tooth(i, path, total_count));
+
+            const p = document.createElement("p");
+            p.innerHTML = i;
+            tooth.appendChild(p);
+        } else {
+            if (i > 40) {
+                scale_x = -1;
+            }
+            const p = document.createElement("p");
+            p.innerHTML = i;
+            tooth.appendChild(p);
+
+            tooth.appendChild(build_tooth(i, path, total_count));
+            tooth.appendChild(side_view(i, scale_x, scale_y));
+        }
         half_row.appendChild(tooth);
     }
 }
