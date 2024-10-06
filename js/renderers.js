@@ -15,9 +15,7 @@ const front_path = [
     [`<path d=" M 0 0 v 48 l 12 -24 z " ></path>`, [12, 48]],
 ];
 
-const root_tops = [];
-
-function front_bottom_central() {
+function central_bottom() {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.style.stroke = "black";
     path.style.fill = "none";
@@ -28,6 +26,20 @@ function front_bottom_central() {
         21.542
         C 33.173 24.643 12.956 26.749 11.979 21.212 C 8.877 21.652 9.459 5.505
         12.561 5.065 Z`,
+    );
+    return path;
+}
+
+function fourth_fifth() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = "none";
+    path.setAttribute(
+        "d",
+        `M 12.763 7.287 C 11.2 5.277 22.975 -5.36 31.098 5.82 C 33.361 6.777 37.006
+        21.749 33.029 22.35 C 34.005 26.598 15.053 30.778 11.575 21.818 C 7.54
+        19.49 10.588 7.525 12.763 7.287 Z
+</svg>`,
     );
     return path;
 }
@@ -57,6 +69,17 @@ const rf_directions = `M 12.41 23.239 C 11.141
 26.336 10.819 73.956 17.461 75.298 C 21.416 76.323 34.673 36.888 33.194 23.075
 C 31.954 28.486 11.725 27.308 12.41 23.239 Z`;
 
+// root single fouth
+const rsf_directions = `M 32.932 22.583 C 36.032
+24.406 26.277 60.785 20.406 57.332 C 14.623 61.308 9.608 15.05 11.719 22.381 C
+13.83 29.712 32.962 29.234 32.932 22.583 Z`;
+
+// root fifth
+const rff_directions = `M 11.719 22.785 C 11.814
+28.223 14.303 41.289 15.706 44.533 C 16.015 46.729 11.98 55.737 17.594 57.494 C
+25.538 62.973 36.363 22.23 32.702 24.322 C 29.041 26.414 17.279 31.045 11.719
+22.785 Z`;
+
 function single_root(directions) {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.style.stroke = "black";
@@ -68,23 +91,8 @@ function single_root(directions) {
     return path;
 }
 
-function fang_canal() {
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.style.stroke = "black";
-    path.style.fill = fill_color;
-    path.setAttribute(
-        "d",
-        `M 18.588 27.027 L 25.659 27.431 C 25.65 30.381
-18.808 75.126 17.577 73.495 C 16.346 71.864 18.79 27.229 18.588 27.027
-Z`,
-    );
-    path.addEventListener("click", (event) => {
-        event.target.replaceWith(single_canal());
-    });
-    return path;
-}
-
-function single_canal() {
+// don't touch for now, we need to rerender on click
+function single_central_canal() {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.style.stroke = "black";
     path.style.fill = fill_color;
@@ -100,8 +108,84 @@ function single_canal() {
     return path;
 }
 
+// don't touch for now, we need to rerender on click
+function fang_canal() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = fill_color;
+    path.setAttribute(
+        "d",
+        `M 18.588 27.027 L 25.659 27.431 C 25.65 30.381
+18.808 75.126 17.577 73.495 C 16.346 71.864 18.79 27.229 18.588 27.027
+Z`,
+    );
+    path.addEventListener("click", (event) => {
+        event.target.replaceWith(fang_canal());
+    });
+    return path;
+}
+
+// don't touch for now, we need to rerender on click
+// single fourth_fifth canal
+function sff_canal() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = fill_color;
+    path.setAttribute(
+        "d",
+        `
+  M 22.224 27.229 C 21.79
+        28.572 25.428 28.167 26.063 27.431 C 23.591 48.585 18.658 58.317 19.194
+        56.726 C 19.264 57.633 22.531 27.402 22.224 27.229 Z`,
+    );
+    path.addEventListener("click", (event) => {
+        event.target.replaceWith(sff_canal());
+    });
+    return path;
+}
+
+function lower_jaw(tooth, tid, path, total_count, scale_x) {
+    tooth.appendChild(build_tooth(tid, path, total_count));
+    let t = {};
+    let roots = {};
+    let canals = [];
+    switch (tid % 10) {
+        case 1:
+        case 2: {
+            t = central_bottom();
+            roots = single_root(rbc_directions);
+            canals = [single_central_canal()];
+            break;
+        }
+        case 3: {
+            t = fang();
+            roots = single_root(rf_directions);
+            canals = [fang_canal()];
+            break;
+        }
+        case 4:
+            t = fourth_fifth();
+            roots = single_root(rsf_directions);
+            canals = [sff_canal()];
+            break;
+        case 5:
+            t = fourth_fifth();
+            roots = single_root(rff_directions);
+            canals = [sff_canal()];
+            break;
+        case 6:
+        case 7:
+        case 8:
+            t = central_bottom();
+            roots = single_root(rbc_directions);
+            canals.push(sff_canal());
+            break;
+    }
+    tooth.appendChild(side_view(t, roots, canals, scale_x, 1));
+}
+
 /** @param {Boolean} mirror */
-export function side_view(tid, scale_x, scale_y) {
+export function side_view(tooth, roots, canals, scale_x, scale_y) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.viewBox = "0 0 48 90";
     svg.style.width = "48px";
@@ -115,18 +199,15 @@ export function side_view(tid, scale_x, scale_y) {
     tx = scale_x === -1 ? 48 : 0;
     ty = scale_y === -1 ? 90 : 0;
 
+    console.log(canals);
     group.setAttribute(
         "transform",
         `translate(${tx},${ty}) scale(${scale_x}, ${scale_y})`,
     );
-    if (tid % 10 == 3) {
-        group.appendChild(fang());
-        group.appendChild(single_root(rf_directions));
-        group.appendChild(fang_canal());
-    } else {
-        group.appendChild(front_bottom_central());
-        group.appendChild(single_root(rbc_directions));
-        group.appendChild(single_canal());
+    group.appendChild(tooth);
+    group.appendChild(roots);
+    for (const canal of canals) {
+        group.appendChild(canal);
     }
     svg.appendChild(group);
     return svg;
@@ -137,29 +218,27 @@ function render_tooth(half_row, min, cmp, inc, path, total_count) {
         const tooth = document.createElement("div");
         tooth.style.display = "flex";
         tooth.style.flexDirection = "column";
-        let scale_x = 1;
-        let scale_y = 1;
         if (i < 30) {
-            scale_y = -1;
-            if (i > 20) {
-                scale_x = -1;
-            }
-            tooth.appendChild(side_view(i, scale_x, scale_y));
-            tooth.appendChild(build_tooth(i, path, total_count));
-
-            const p = document.createElement("p");
-            p.innerHTML = i;
-            tooth.appendChild(p);
+            // scale_y = -1;
+            // if (i > 20) {
+            //     scale_x = -1;
+            // }
+            // tooth.appendChild(side_view(i, scale_x, scale_y));
+            // tooth.appendChild(build_tooth(i, path, total_count));
+            //
+            // const p = document.createElement("p");
+            // p.innerHTML = i;
+            // tooth.appendChild(p);
         } else {
-            if (i > 40) {
-                scale_x = -1;
-            }
             const p = document.createElement("p");
             p.innerHTML = i;
             tooth.appendChild(p);
 
-            tooth.appendChild(build_tooth(i, path, total_count));
-            tooth.appendChild(side_view(i, scale_x, scale_y));
+            if (i > 40) {
+                lower_jaw(tooth, i, path, total_count, -1);
+            } else {
+                lower_jaw(tooth, i, path, total_count, 1);
+            }
         }
         half_row.appendChild(tooth);
     }
