@@ -15,6 +15,34 @@ const front_path = [
     [`<path d=" M 0 0 v 48 l 12 -24 z " ></path>`, [12, 48]],
 ];
 
+const roots = [];
+
+export function root() {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.viewBox = "0 0 48 90";
+    svg.style.width = "48px";
+    svg.style.height = "90px";
+    svg.addEventListener("click", (event) => {
+        event.target.replaceWith(root());
+    });
+    svg.innerHTML =
+        `<path style="stroke: rgb(0, 0, 0); fill: none;" d="M 12.561 5.065 C 11.062
+        3.627 25.215 -2.978 32.916 4.406 C 37.712 4.95 35.477 21.865 32.625
+        21.542
+        C 33.173 24.643 12.956 26.749 11.979 21.212 C 8.877 21.652 9.459 5.505
+        12.561 5.065 Z"> 
+    </path>
+    <path style="stroke: rgb(0, 0, 0); fill: none;"
+        d="M 15.239 24.249 C 19.189 26.806 10.986 62.036 15.239 63.378 C 19.194
+        62.1 32.663 36.131 30.164 23.075 C 29.331 25.991 15.212 24.918 15.239
+        24.249 Z">
+    </path>
+    <path style="stroke: black; fill: ${fill_color};" d="M 21.416 25.007 L 26.467
+        24.401 C 26.844 24.652 17.719 61.535 16.365 60.767 C 15.011 59.999 21.618
+        25.209 21.416 25.007 Z">
+    </path>`;
+    return svg;
+}
 function render_tooth(half_row, min, cmp, inc, path, total_count) {
     for (let i = min; cmp(i); i += inc) {
         const tooth = document.createElement("div");
