@@ -30,20 +30,6 @@ function central_bottom() {
     return path;
 }
 
-function fourth_fifth() {
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.style.stroke = "black";
-    path.style.fill = "none";
-    path.setAttribute(
-        "d",
-        `M 12.763 7.287 C 11.2 5.277 22.975 -5.36 31.098 5.82 C 33.361 6.777 37.006
-        21.749 33.029 22.35 C 34.005 26.598 15.053 30.778 11.575 21.818 C 7.54
-        19.49 10.588 7.525 12.763 7.287 Z
-</svg>`,
-    );
-    return path;
-}
-
 function fang() {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.style.stroke = "black";
@@ -54,6 +40,47 @@ function fang() {
 4.065 25.399 -5.764 33.522 5.416 C 38.336 5.948 37.355 21.691 33.029 22.35 C
 34.005 26.598 15.053 30.778 11.575 21.818 C 6.263 19.49 8.516 6.313 11.551
 6.075 Z`,
+    );
+    return path;
+}
+
+function fifth() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = "none";
+    path.setAttribute(
+        "d",
+        `M 12.763 7.287 C 11.2 5.277 22.975 -5.36 31.098 5.82 C 33.361 6.777 37.006
+        21.749 33.029 22.35 C 34.005 26.598 15.053 30.778 11.575 21.818 C 7.54
+        19.49 10.588 7.525 12.763 7.287 Z`,
+    );
+    return path;
+}
+
+function bottom_sixth() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = "none";
+    path.setAttribute(
+        "d",
+        `M 6.092 12.654 C 3.906
+12.654 3.906 25.32 6.092 25.32 C 7.44 31.387 42.286 30.089 41.259 25.469 C
+43.643 25.668 43.941 11.958 41.557 11.759 C 36.007 4.44 32.56 7.058 23.824
+12.057 C 17.446 8.089 12.203 4.535 6.092 12.654 Z`,
+    );
+    return path;
+}
+
+function bottom_back() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = "none";
+    path.setAttribute(
+        "d",
+        `M 6.092 11.164 C 3.906 11.164 3.906 25.32 6.092 25.32 C 7.44 31.387
+        42.286 30.089 41.259 25.469 C 43.643 25.668 43.941 11.958 41.557 11.759
+        C 37.335 6.763 35.323 8.84 23.973 9.971 C 16.289 9.623 8.868 4.329
+        6.092 11.164 Z`,
     );
     return path;
 }
@@ -80,7 +107,23 @@ const rff_directions = `M 11.719 22.785 C 11.814
 25.538 62.973 36.363 22.23 32.702 24.322 C 29.041 26.414 17.279 31.045 11.719
 22.785 Z`;
 
-function single_root(directions) {
+// root sixth
+const rs_directions = `M 22.185 47.82 C 23.164
+47.971 27.758 29.245 25.314 29.343 C 25.898 30.074 9.012 28.784 8.029 27.555 C
+17.718 32.234 4.636 62.973 9.966 64.361 C 12.998 68.404 22.629 48.461 22.483
+48.267 C 21.947 49.004 31.268 69.437 33.659 66.149 C 41.743 65.572 41.374
+27.685 39.023 27.853 C 39.029 27.864 26.798 30.821 26.059 29.343 C 26.26 30.501
+23.453 48.15 22.185 47.82 Z`;
+
+// root back
+const rb_directions =
+    `M 22.185 47.82 C 23.164 47.971 27.758 29.245 25.314 29.343 C 25.898 30.074
+9.012 28.784 8.029 27.555 C 14.442 48.976 4.6 63.155 9.966 64.361 C 12.998
+68.404 22.629 48.461 22.483 48.267 C 21.947 49.004 31.268 71.672 33.659 68.384
+C 41.743 67.807 41.374 27.685 39.023 27.853 C 39.029 27.864 26.798 30.821
+26.059 29.343 C 26.26 30.501 23.453 48.15 22.185 47.82 Z`;
+
+function roots(directions) {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.style.stroke = "black";
     path.style.fill = "none";
@@ -144,48 +187,154 @@ function sff_canal() {
     return path;
 }
 
+function sixth_canal_left() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = fill_color;
+    path.setAttribute(
+        "d",
+        `M 16.97 29.343 L 21.142 29.641 C 22.715 30.54 11.015 65.491 9.817
+        64.807 C 9.662 64.809 16.732 29.341 16.97 29.343 Z`,
+    );
+    path.addEventListener("click", (event) => {
+        event.target.replaceWith(sixth_canal_left());
+    });
+    return path;
+}
+
+function sixth_canal_middle() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = fill_color;
+    path.setAttribute(
+        "d",
+        `M 30.828 29.343 L 35.298 28.449 C 37.648 33.447 35.904 66.533 35.298
+        65.255 L 30.828 29.343 Z`,
+    );
+    path.addEventListener("click", (event) => {
+        event.target.replaceWith(sixth_canal_middle());
+    });
+    return path;
+}
+
+function sixth_canal_right() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = fill_color;
+    path.setAttribute(
+        "d",
+        `M 30.679 29.194 C 30.732 29.394 33.103 46.378 32.765 46.181 C 33.012
+        46.428 29.864 62.8 29.338 62.274 C 28.324 62.666 28.588 29.597 30.679
+        29.194 Z`,
+    );
+    path.addEventListener("click", (event) => {
+        event.target.replaceWith(sixth_canal_right());
+    });
+    return path;
+}
+
+function bottom_back_canal_left() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = fill_color;
+    path.setAttribute(
+        "d",
+        `M 16.97 29.343 L 21.142 29.641 C 22.715 30.54 11.015 65.491 9.817
+        64.807 C 9.662 64.809 16.732 29.341 16.97 29.343 Z`,
+    );
+    path.addEventListener("click", (event) => {
+        event.target.replaceWith(bottom_back_canal_left());
+    });
+    return path;
+}
+
+function bottom_back_canal_middle() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = fill_color;
+    path.setAttribute(
+        "d",
+        `M 32.765 28.896 L 35.298 28.449 C 37.648 33.447 36.5 67.874 35.894
+        66.596 L 32.765 28.896 Z`,
+    );
+    path.addEventListener("click", (event) => {
+        event.target.replaceWith(bottom_back_canal_middle());
+    });
+    return path;
+}
+
+function bottom_back_canal_right() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.style.stroke = "black";
+    path.style.fill = fill_color;
+    path.setAttribute(
+        "d",
+        `M 29.934 29.492 C 29.987 29.692 32.209 29.689 31.871 29.492 C 32.118
+        29.739 30.609 65.333 30.083 64.807 C 29.069 65.199 27.843 29.895 29.934
+        29.492 Z`,
+    );
+    path.addEventListener("click", (event) => {
+        event.target.replaceWith(bottom_back_canal_right());
+    });
+    return path;
+}
+
 function lower_jaw(tooth, tid, path, total_count, scale_x) {
     tooth.appendChild(build_tooth(tid, path, total_count));
     let t = {};
-    let roots = {};
+    let rts = {};
     let canals = [];
     switch (tid % 10) {
         case 1:
         case 2: {
             t = central_bottom();
-            roots = single_root(rbc_directions);
+            rts = roots(rbc_directions);
             canals = [single_central_canal()];
             break;
         }
         case 3: {
             t = fang();
-            roots = single_root(rf_directions);
+            rts = roots(rf_directions);
             canals = [fang_canal()];
             break;
         }
         case 4:
-            t = fourth_fifth();
-            roots = single_root(rsf_directions);
+            // no point in making fourth crown for now as they look basically
+            // the same
+            t = fifth();
+            rts = roots(rsf_directions);
             canals = [sff_canal()];
             break;
         case 5:
-            t = fourth_fifth();
-            roots = single_root(rff_directions);
+            t = fifth();
+            rts = roots(rff_directions);
             canals = [sff_canal()];
             break;
         case 6:
+            t = bottom_sixth();
+            rts = roots(rs_directions);
+            canals = [
+                sixth_canal_left(),
+                sixth_canal_middle(),
+                sixth_canal_right(),
+            ];
+            break;
         case 7:
         case 8:
-            t = central_bottom();
-            roots = single_root(rbc_directions);
-            canals.push(sff_canal());
+            t = bottom_back();
+            rts = roots(rb_directions);
+            canals = [
+                bottom_back_canal_left(),
+                bottom_back_canal_middle(),
+                bottom_back_canal_right(),
+            ];
             break;
     }
-    tooth.appendChild(side_view(t, roots, canals, scale_x, 1));
+    tooth.appendChild(side_view(t, rts, canals, scale_x, 1));
 }
 
 /** @param {Boolean} mirror */
-export function side_view(tooth, roots, canals, scale_x, scale_y) {
+export function side_view(tooth, rts, canals, scale_x, scale_y) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.viewBox = "0 0 48 90";
     svg.style.width = "48px";
@@ -205,7 +354,7 @@ export function side_view(tooth, roots, canals, scale_x, scale_y) {
         `translate(${tx},${ty}) scale(${scale_x}, ${scale_y})`,
     );
     group.appendChild(tooth);
-    group.appendChild(roots);
+    group.appendChild(rts);
     for (const canal of canals) {
         group.appendChild(canal);
     }
