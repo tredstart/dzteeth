@@ -4,15 +4,15 @@ export const fourth_fifth =
         19.49 10.588 7.525 12.763 7.287 Z`;
 
 // root single fouth
-export const rsf_directions = `M 32.932 22.583 C 36.032
+export const rsf_directions = [`M 32.932 22.583 C 36.032
 24.406 26.277 60.785 20.406 57.332 C 14.623 61.308 9.608 15.05 11.719 22.381 C
-13.83 29.712 32.962 29.234 32.932 22.583 Z`;
+13.83 29.712 32.962 29.234 32.932 22.583 Z`];
 
 // root fifth
-export const rff_directions = `M 11.719 22.785 C 11.814
+export const rff_directions = [`M 11.719 22.785 C 11.814
 28.223 14.303 41.289 15.706 44.533 C 16.015 46.729 11.98 55.737 17.594 57.494 C
 25.538 62.973 36.363 22.23 32.702 24.322 C 29.041 26.414 17.279 31.045 11.719
-22.785 Z`;
+22.785 Z`];
 
 // single fourth_fifth canal
 export const sff = [

@@ -5,10 +5,11 @@ export const central_bottom = `M 12.561 5.065 C 11.062
         12.561 5.065 Z`;
 
 // root bottom central
-export const rbc_directions =
+export const rbc_directions = [
     `M 15.239 24.249 C 19.189 26.806 10.986 62.036 15.239 63.378 C 19.194
         62.1 32.663 36.131 30.164 23.075 C 29.331 25.991 15.212 24.918 15.239
-        24.249 Z`;
+        24.249 Z`,
+];
 
 export const scc = [
     `M 21.416 25.007 L 26.467

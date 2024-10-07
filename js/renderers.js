@@ -21,6 +21,10 @@ import {
     rsf_directions,
     sff,
 } from "./teeth/general/fourth.js";
+import { rbt_directions, tbc, top_back } from "./teeth/top_specific/back.js";
+import { central_top, ctc, rct } from "./teeth/top_specific/central.js";
+import { rft_directions, tfc } from "./teeth/top_specific/fourth.js";
+import { rts_directions, tsc } from "./teeth/top_specific/sixth.js";
 
 const back_path = [
     [`<path d=" M 0 0 h 48 l -12 12 h -24 z "></path>`, [48, 12]],
@@ -64,14 +68,74 @@ function canal(directions) {
 }
 
 function roots(directions) {
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.style.stroke = "black";
-    path.style.fill = "none";
-    path.setAttribute(
-        "d",
-        directions,
+    const group = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g",
     );
-    return path;
+    for (const direction of directions) {
+        const path = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path",
+        );
+        path.style.stroke = "black";
+        path.style.fill = "none";
+        path.setAttribute(
+            "d",
+            direction,
+        );
+        group.appendChild(path);
+    }
+    return group;
+}
+
+function upper_jaw(tooth, tid, path, total_count, scale_x) {
+    let t = {};
+    let rts = {};
+    let canals = [];
+    switch (tid % 10) {
+        case 1:
+            t = crown(central_top);
+            rts = roots(rct);
+            canals = ctc.map(canal);
+            break;
+        case 2: {
+            t = crown(central_bottom);
+            rts = roots(rbc_directions);
+            canals = scc.map(canal);
+            break;
+        }
+        case 3: {
+            t = crown(fang);
+            rts = roots(rf_directions);
+            canals = fc.map(canal);
+            break;
+        }
+        case 4:
+            // no point in making fourth crown for now as they look basically
+            // the same
+            t = crown(fourth_fifth);
+            rts = roots(rft_directions);
+            canals = tfc.map(canal);
+            break;
+        case 5:
+            t = crown(fourth_fifth);
+            rts = roots(rff_directions);
+            canals = sff.map(canal);
+            break;
+        case 6:
+            t = crown(bottom_sixth);
+            rts = roots(rts_directions);
+            canals = tsc.map(canal);
+            break;
+        case 7:
+        case 8:
+            t = crown(top_back);
+            rts = roots(rbt_directions);
+            canals = tbc.map(canal);
+            break;
+    }
+    tooth.appendChild(side_view(t, rts, canals, scale_x, -1));
+    tooth.appendChild(build_tooth(tid, path, total_count));
 }
 
 function lower_jaw(tooth, tid, path, total_count, scale_x) {
@@ -126,7 +190,6 @@ export function side_view(tooth, rts, canals, scale_x, scale_y) {
     svg.viewBox = "0 0 48 90";
     svg.style.width = "48px";
     svg.style.height = "90px";
-    // Create a group with transform for mirroring
     const group = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "g",
@@ -135,7 +198,6 @@ export function side_view(tooth, rts, canals, scale_x, scale_y) {
     tx = scale_x === -1 ? 48 : 0;
     ty = scale_y === -1 ? 90 : 0;
 
-    console.log(canals);
     group.setAttribute(
         "transform",
         `translate(${tx},${ty}) scale(${scale_x}, ${scale_y})`,
@@ -155,16 +217,15 @@ function render_tooth(half_row, min, cmp, inc, path, total_count) {
         tooth.style.display = "flex";
         tooth.style.flexDirection = "column";
         if (i < 30) {
-            // scale_y = -1;
-            // if (i > 20) {
-            //     scale_x = -1;
-            // }
-            // tooth.appendChild(side_view(i, scale_x, scale_y));
-            // tooth.appendChild(build_tooth(i, path, total_count));
-            //
-            // const p = document.createElement("p");
-            // p.innerHTML = i;
-            // tooth.appendChild(p);
+            if (i > 40) {
+                upper_jaw(tooth, i, path, total_count, -1);
+            } else {
+                upper_jaw(tooth, i, path, total_count, 1);
+            }
+
+            const p = document.createElement("p");
+            p.innerHTML = i;
+            tooth.appendChild(p);
         } else {
             const p = document.createElement("p");
             p.innerHTML = i;

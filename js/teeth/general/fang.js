@@ -4,9 +4,9 @@ export const fang = `M 11.551 6.075 C 9.988
 6.075 Z`;
 
 // root fang
-export const rf_directions = `M 12.41 23.239 C 11.141
+export const rf_directions = [`M 12.41 23.239 C 11.141
 26.336 10.819 73.956 17.461 75.298 C 21.416 76.323 34.673 36.888 33.194 23.075
-C 31.954 28.486 11.725 27.308 12.41 23.239 Z`;
+C 31.954 28.486 11.725 27.308 12.41 23.239 Z`];
 
 // fang canal
 export const fc = [
