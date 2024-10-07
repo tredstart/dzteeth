@@ -217,7 +217,7 @@ function render_tooth(half_row, min, cmp, inc, path, total_count) {
         tooth.style.display = "flex";
         tooth.style.flexDirection = "column";
         if (i < 30) {
-            if (i > 40) {
+            if (i > 20) {
                 upper_jaw(tooth, i, path, total_count, -1);
             } else {
                 upper_jaw(tooth, i, path, total_count, 1);
@@ -242,6 +242,10 @@ function render_tooth(half_row, min, cmp, inc, path, total_count) {
 }
 
 export default function render_adult_teeth() {
+    const face = document.createElement("div");
+    face.style.display = "grid";
+    face.style.gridTemplateColumns = "repeat(2, 1fr)";
+    face.style.gridTemplateRows = "repeat(2, 1fr)";
     for (let part = 1; part <= 4; part += 1) {
         const half_row = document.createElement("div");
         half_row.style.display = "flex";
@@ -291,8 +295,10 @@ export default function render_adult_teeth() {
                 6,
             );
         }
-        document.body.appendChild(half_row);
+        face.appendChild(half_row);
     }
+
+    return face;
 }
 
 export function build_tooth(tooth_id, path, total_parts) {

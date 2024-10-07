@@ -6,5 +6,9 @@ self.onload = function () {
     console.log("we ball");
     init_global_state();
     configure_options();
-    render_adult_teeth();
+    const face = render_adult_teeth();
+    const container = document.createElement("div");
+    container.style.width = "50%";
+    container.appendChild(face);
+    document.body.appendChild(container);
 };
