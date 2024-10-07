@@ -216,84 +216,167 @@ function render_tooth(half_row, min, cmp, inc, path, total_count) {
         const tooth = document.createElement("div");
         tooth.style.display = "flex";
         tooth.style.flexDirection = "column";
-        if (i < 30) {
-            if (i > 20) {
-                upper_jaw(tooth, i, path, total_count, -1);
+        const p = document.createElement("p");
+        p.innerHTML = i;
+        if (i < 50) {
+            if (i < 30) {
+                if (i > 20) {
+                    upper_jaw(tooth, i, path, total_count, -1);
+                } else {
+                    upper_jaw(tooth, i, path, total_count, 1);
+                }
+                tooth.appendChild(p);
             } else {
-                upper_jaw(tooth, i, path, total_count, 1);
+                tooth.appendChild(p);
+                if (i > 40) {
+                    lower_jaw(tooth, i, path, total_count, 1);
+                    half_row.style.gridColumnStart = 1;
+                    half_row.style.gridRowStart = 2;
+                } else {
+                    lower_jaw(tooth, i, path, total_count, -1);
+                    half_row.style.gridColumnStart = 2;
+                    half_row.style.gridRowStart = 2;
+                }
             }
-
-            const p = document.createElement("p");
-            p.innerHTML = i;
-            tooth.appendChild(p);
         } else {
-            const p = document.createElement("p");
-            p.innerHTML = i;
-            tooth.appendChild(p);
-
-            if (i > 40) {
-                lower_jaw(tooth, i, path, total_count, -1);
+            if (i < 70) {
+                if (i > 60) {
+                    child_jaw(tooth, i, path, total_count, -1, -1);
+                } else {
+                    child_jaw(tooth, i, path, total_count, 1, -1);
+                }
+                tooth.appendChild(p);
             } else {
-                lower_jaw(tooth, i, path, total_count, 1);
+                tooth.appendChild(p);
+                if (i > 80) {
+                    child_jaw(tooth, i, path, total_count, 1, 1);
+                    half_row.style.gridColumnStart = 1;
+                    half_row.style.gridRowStart = 2;
+                } else {
+                    child_jaw(tooth, i, path, total_count, -1, 1);
+                    half_row.style.gridColumnStart = 2;
+                    half_row.style.gridRowStart = 2;
+                }
             }
         }
         half_row.appendChild(tooth);
     }
 }
 
-export default function render_adult_teeth() {
+function child_jaw(tooth, tid, path, total_count, scale_x, scale_y) {
+    let t = {};
+    let rts = {};
+    let canals = [];
+    switch (tid % 10) {
+        case 1:
+        case 2: {
+            t = crown(central_bottom);
+            rts = roots(rbc_directions);
+            canals = scc.map(canal);
+            break;
+        }
+        case 3: {
+            t = crown(fang);
+            rts = roots(rf_directions);
+            canals = fc.map(canal);
+            break;
+        }
+        case 4:
+            t = crown(bottom_sixth);
+            rts = roots(rts_directions);
+            canals = tsc.map(canal);
+            break;
+        case 5:
+            t = crown(bottom_sixth);
+            rts = roots(rts_directions);
+            canals = tsc.map(canal);
+            break;
+    }
+    if (scale_y === 1) {
+        tooth.appendChild(build_tooth(tid, path, total_count));
+        tooth.appendChild(side_view(t, rts, canals, scale_x, scale_y));
+    } else {
+        tooth.appendChild(side_view(t, rts, canals, scale_x, scale_y));
+        tooth.appendChild(build_tooth(tid, path, total_count));
+    }
+}
+
+export function render_child_teeth() {
+    return render_teeth(5, 8, 5);
+}
+export function render_adult_teeth() {
+    return render_teeth(1, 4, 8);
+}
+
+function render_asc(half_row, row, max) {
+    render_tooth(
+        half_row,
+        row + 1,
+        (i) => {
+            return i <= row + 3;
+        },
+        1,
+        front_path,
+        4,
+    );
+    render_tooth(
+        half_row,
+        row + 4,
+        (i) => {
+            return i <= row + max;
+        },
+        1,
+        back_path,
+        6,
+    );
+}
+function render_dsc(half_row, row, max) {
+    render_tooth(
+        half_row,
+        row + max,
+        (i) => {
+            return i >= row + 4;
+        },
+        -1,
+        back_path,
+        6,
+    );
+    render_tooth(
+        half_row,
+        row + 3,
+        (i) => {
+            return i > row;
+        },
+        -1,
+        front_path,
+        4,
+    );
+}
+
+export function render_teeth(start, end, max) {
     const face = document.createElement("div");
     face.style.display = "grid";
     face.style.gridTemplateColumns = "repeat(2, 1fr)";
     face.style.gridTemplateRows = "repeat(2, 1fr)";
-    for (let part = 1; part <= 4; part += 1) {
+    for (let part = start; part <= end; part += 1) {
         const half_row = document.createElement("div");
         half_row.style.display = "flex";
         half_row.style.flexDirection = "row";
 
         const row = part * 10;
-        if (part & 1 == 1) {
-            render_tooth(
-                half_row,
-                row + 8,
-                (i) => {
-                    return i >= row + 4;
-                },
-                -1,
-                back_path,
-                6,
-            );
-            render_tooth(
-                half_row,
-                row + 3,
-                (i) => {
-                    return i > row;
-                },
-                -1,
-                front_path,
-                4,
-            );
-        } else {
-            render_tooth(
-                half_row,
-                row + 1,
-                (i) => {
-                    return i <= row + 3;
-                },
-                1,
-                front_path,
-                4,
-            );
-            render_tooth(
-                half_row,
-                row + 4,
-                (i) => {
-                    return i <= row + 8;
-                },
-                1,
-                back_path,
-                6,
-            );
+        switch (part) {
+            case 1:
+            case 4:
+            case 5:
+            case 8:
+                render_dsc(half_row, row, max);
+                break;
+            case 2:
+            case 3:
+            case 6:
+            case 7:
+                render_asc(half_row, row, max);
+                break;
         }
         face.appendChild(half_row);
     }

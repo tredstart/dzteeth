@@ -10,7 +10,7 @@ function init_parts(parts, min, cmp, inc) {
 }
 
 export function init_global_state() {
-    for (let part = 1; part <= 4; part += 1) {
+    for (let part = 1; part <= 8; part += 1) {
         const row = part * 10;
         if (part & 1 == 1) {
             init_parts(
