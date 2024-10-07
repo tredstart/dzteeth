@@ -13,6 +13,7 @@ export function init_global_state() {
     for (let part = 1; part <= 8; part += 1) {
         const row = part * 10;
         if (part & 1 == 1) {
+            // FIXME: this
             init_parts(
                 6,
                 row + 8,
@@ -49,11 +50,20 @@ export function init_global_state() {
         }
     }
 }
+
+export let state_changed_callback;
 export function set_global_state(state) {
     global_state = state;
-    console.log(global_state);
+    state_changed_callback(global_state);
 }
 export let fill_color = "transparent";
 export function set_fill_color(color) {
     fill_color = color;
+}
+export let root_color = "transparent";
+export function set_root_color(color) {
+    root_color = color;
+}
+export function set_state_callback(callback) {
+    state_changed_callback = callback;
 }

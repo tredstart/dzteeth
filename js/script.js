@@ -1,9 +1,10 @@
 import { configure_options } from "./helpers.js";
 import { render_adult_teeth, render_child_teeth } from "./renderers.js";
-import { init_global_state } from "./state_manager.js";
+import { init_global_state, set_state_callback } from "./state_manager.js";
 
 self.onload = function () {
     console.log("we ball");
+    set_state_callback(console.log);
     init_global_state();
     configure_options();
     const adult_face = render_adult_teeth();
