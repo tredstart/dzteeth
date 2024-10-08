@@ -53,16 +53,19 @@ export function crown(directions) {
     return path;
 }
 
-function canal(directions) {
+function canal(tid, cid, directions) {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.style.stroke = "black";
-    path.style.fill = fill_color;
+    path.style.fill = global_state[tid].canals[cid];
     path.setAttribute(
         "d",
         directions,
     );
     path.addEventListener("click", (event) => {
         event.target.style.fill = fill_color;
+        temp_state = global_state;
+        temp_state[tid].canals[cid] = fill_color;
+        set_global_state(temp_state);
     });
     return path;
 }
@@ -96,18 +99,18 @@ function upper_jaw(tooth, tid, path, total_count, scale_x) {
         case 1:
             t = crown(central_top);
             rts = roots(rct);
-            canals = ctc.map(canal);
+            canals = ctc.map((dir, index) => canal(tid, index, dir));
             break;
         case 2: {
             t = crown(central_bottom);
             rts = roots(rbc_directions);
-            canals = scc.map(canal);
+            canals = scc.map((dir, index) => canal(tid, index, dir));
             break;
         }
         case 3: {
             t = crown(fang);
             rts = roots(rf_directions);
-            canals = fc.map(canal);
+            canals = fc.map((dir, index) => canal(tid, index, dir));
             break;
         }
         case 4:
@@ -115,23 +118,23 @@ function upper_jaw(tooth, tid, path, total_count, scale_x) {
             // the same
             t = crown(fourth_fifth);
             rts = roots(rft_directions);
-            canals = tfc.map(canal);
+            canals = tfc.map((dir, index) => canal(tid, index, dir));
             break;
         case 5:
             t = crown(fourth_fifth);
             rts = roots(rff_directions);
-            canals = sff.map(canal);
+            canals = sff.map((dir, index) => canal(tid, index, dir));
             break;
         case 6:
             t = crown(bottom_sixth);
             rts = roots(rts_directions);
-            canals = tsc.map(canal);
+            canals = tsc.map((dir, index) => canal(tid, index, dir));
             break;
         case 7:
         case 8:
             t = crown(top_back);
             rts = roots(rbt_directions);
-            canals = tbc.map(canal);
+            canals = tbc.map((dir, index) => canal(tid, index, dir));
             break;
     }
     tooth.appendChild(side_view(t, rts, canals, scale_x, -1));
@@ -148,13 +151,13 @@ function lower_jaw(tooth, tid, path, total_count, scale_x) {
         case 2: {
             t = crown(central_bottom);
             rts = roots(rbc_directions);
-            canals = scc.map(canal);
+            canals = scc.map((dir, index) => canal(tid, index, dir));
             break;
         }
         case 3: {
             t = crown(fang);
             rts = roots(rf_directions);
-            canals = fc.map(canal);
+            canals = fc.map((dir, index) => canal(tid, index, dir));
             break;
         }
         case 4:
@@ -162,23 +165,23 @@ function lower_jaw(tooth, tid, path, total_count, scale_x) {
             // the same
             t = crown(fourth_fifth);
             rts = roots(rsf_directions);
-            canals = sff.map(canal);
+            canals = sff.map((dir, index) => canal(tid, index, dir));
             break;
         case 5:
             t = crown(fourth_fifth);
             rts = roots(rff_directions);
-            canals = sff.map(canal);
+            canals = sff.map((dir, index) => canal(tid, index, dir));
             break;
         case 6:
             t = crown(bottom_sixth);
             rts = roots(rs_directions);
-            canals = bsc.map(canal);
+            canals = bsc.map((dir, index) => canal(tid, index, dir));
             break;
         case 7:
         case 8:
             t = crown(bottom_back);
             rts = roots(rb_directions);
-            canals = bbc.map(canal);
+            canals = bbc.map((dir, index) => canal(tid, index, dir));
             break;
     }
     tooth.appendChild(side_view(t, rts, canals, scale_x, 1));
@@ -272,24 +275,24 @@ function child_jaw(tooth, tid, path, total_count, scale_x, scale_y) {
         case 2: {
             t = crown(central_bottom);
             rts = roots(rbc_directions);
-            canals = scc.map(canal);
+            canals = scc.map((dir, index) => canal(tid, index, dir));
             break;
         }
         case 3: {
             t = crown(fang);
             rts = roots(rf_directions);
-            canals = fc.map(canal);
+            canals = fc.map((dir, index) => canal(tid, index, dir));
             break;
         }
         case 4:
             t = crown(bottom_sixth);
             rts = roots(rts_directions);
-            canals = tsc.map(canal);
+            canals = tsc.map((dir, index) => canal(tid, index, dir));
             break;
         case 5:
             t = crown(bottom_sixth);
             rts = roots(rts_directions);
-            canals = tsc.map(canal);
+            canals = tsc.map((dir, index) => canal(tid, index, dir));
             break;
     }
     if (scale_y === 1) {
@@ -395,7 +398,7 @@ export function build_tooth(tooth_id, path, total_parts) {
                 part_id,
                 size[0],
                 size[1],
-                global_state[tooth_id][part_id],
+                global_state[tooth_id].tooth[part_id],
                 part_type[0],
             ),
         );
@@ -409,19 +412,12 @@ export function build_tooth(tooth_id, path, total_parts) {
 export function build_tooth_part(tooth_id, side_id, w, h, fill, path) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
-    svg.dataset.tooth = tooth_id;
-    svg.dataset.side = side_id;
-
     svg.addEventListener("click", (e) => {
         s = e.target.parentElement;
-        tid = s.dataset.tooth;
-        sid = s.dataset.side;
-        if (tid !== undefined && sid !== undefined) {
-            s.style.fill = fill_color;
-            const temp_state = global_state;
-            temp_state[tid][sid] = fill_color;
-            set_global_state(temp_state);
-        }
+        s.style.fill = fill_color;
+        const temp_state = global_state;
+        temp_state[tooth_id].tooth[side_id] = fill_color;
+        set_global_state(temp_state);
     });
 
     svg.style.viewBox = `0 0 ${w} ${h}`;
