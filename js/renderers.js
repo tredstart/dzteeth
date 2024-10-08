@@ -1,4 +1,8 @@
-import { fill_color, global_state, set_global_state } from "./state_manager.js";
+import {
+    change_global_state,
+    fill_state,
+    global_state,
+} from "./state_manager.js";
 import {
     bbc,
     bottom_back,
@@ -62,10 +66,16 @@ function canal(tid, cid, directions) {
         directions,
     );
     path.addEventListener("click", (event) => {
-        event.target.style.fill = fill_color;
-        temp_state = global_state;
-        temp_state[tid].canals[cid] = fill_color;
-        set_global_state(temp_state);
+        if (fill_state.canal_color !== null) {
+            event.target.style.fill = fill_state.part_color;
+            change_global_state(
+                tid,
+                "canals",
+                cid,
+                temp_state,
+                fill_state.part_color,
+            );
+        }
     });
     return path;
 }
@@ -413,11 +423,16 @@ export function build_tooth_part(tooth_id, side_id, w, h, fill, path) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
     svg.addEventListener("click", (e) => {
-        s = e.target.parentElement;
-        s.style.fill = fill_color;
-        const temp_state = global_state;
-        temp_state[tooth_id].tooth[side_id] = fill_color;
-        set_global_state(temp_state);
+        if (fill_state.part_color !== null) {
+            s = e.target.parentElement;
+            s.style.fill = fill_state.part_color;
+            change_global_state(
+                tooth_id,
+                "tooth",
+                side_id,
+                fill_state.part_color,
+            );
+        }
     });
 
     svg.style.viewBox = `0 0 ${w} ${h}`;

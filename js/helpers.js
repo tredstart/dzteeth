@@ -1,4 +1,4 @@
-import { set_fill_color } from "./state_manager.js";
+import { set_part_color } from "./state_manager.js";
 
 export function configure_options() {
     const options = document.getElementsByClassName("illness-option");
@@ -9,12 +9,12 @@ export function configure_options() {
                     o.classList.remove("active");
                 }
                 event.target.classList.add("active");
-                set_fill_color(event.target.value);
+                set_part_color(event.target.value);
             });
 
             console.log(option);
             if (option.classList.contains("active")) {
-                set_fill_color(option.value);
+                set_part_color(option.value);
             }
         }
     }
