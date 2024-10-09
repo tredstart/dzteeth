@@ -67,13 +67,12 @@ function canal(tid, cid, directions) {
     );
     path.addEventListener("click", (event) => {
         if (fill_state.canal_color !== null) {
-            event.target.style.fill = fill_state.part_color;
+            event.target.style.fill = fill_state.canal_color;
             change_global_state(
                 tid,
                 "canals",
                 cid,
-                temp_state,
-                fill_state.part_color,
+                fill_state.canal_color,
             );
         }
     });

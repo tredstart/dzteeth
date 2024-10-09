@@ -84,16 +84,20 @@ function init_canals(row) {
     }
 }
 
-export function init_global_state() {
-    for (let part = 1; part <= 8; part += 1) {
-        const row = part * 10;
-        init_parts(4, row + 1, row + 4);
-        if (part < 5) {
-            init_parts(6, row + 4, row + 9);
-        } else {
-            init_parts(6, row + 4, row + 6);
+export function init_global_state(state = null) {
+    if (state === null) {
+        for (let part = 1; part <= 8; part += 1) {
+            const row = part * 10;
+            init_parts(4, row + 1, row + 4);
+            if (part < 5) {
+                init_parts(6, row + 4, row + 9);
+            } else {
+                init_parts(6, row + 4, row + 6);
+            }
+            init_canals(row);
         }
-        init_canals(row);
+    } else {
+        global_state = state;
     }
 }
 
