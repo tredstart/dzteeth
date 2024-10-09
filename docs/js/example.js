@@ -15,9 +15,6 @@ self.onload = function () {
     // if our database is empty we should create a new diagram state
     // else we just initialize our state from the database
     // if the state is null then it will create a new empty one
-    if (Object.keys(state).length === 0) {
-        state = null;
-    }
     dzteeth.init_global_state(state);
 
     // here we are setting up available options for tooth diagram and canal
