@@ -199,7 +199,6 @@ function lower_jaw(tooth, tid, path, total_count, scale_x) {
 /** @param {Boolean} mirror */
 export function side_view(tooth, rts, canals, scale_x, scale_y) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.viewBox = "0 0 48 90";
     svg.style.width = "48px";
     svg.style.height = "90px";
     const group = document.createElementNS(
@@ -207,8 +206,8 @@ export function side_view(tooth, rts, canals, scale_x, scale_y) {
         "g",
     );
 
-    tx = scale_x === -1 ? 48 : 0;
-    ty = scale_y === -1 ? 90 : 0;
+    const tx = scale_x === -1 ? 48 : 0;
+    const ty = scale_y === -1 ? 90 : 0;
 
     group.setAttribute(
         "transform",
@@ -423,7 +422,7 @@ export function build_tooth_part(tooth_id, side_id, w, h, fill, path) {
 
     svg.addEventListener("click", (e) => {
         if (fill_state.part_color !== null) {
-            s = e.target.parentElement;
+            const s = e.target.parentElement;
             s.style.fill = fill_state.part_color;
             change_global_state(
                 tooth_id,
@@ -434,7 +433,6 @@ export function build_tooth_part(tooth_id, side_id, w, h, fill, path) {
         }
     });
 
-    svg.style.viewBox = `0 0 ${w} ${h}`;
     svg.style.width = w;
     svg.style.height = h;
     svg.style.position = "absolute";

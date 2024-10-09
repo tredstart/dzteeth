@@ -1,8 +1,11 @@
 function save_state(tid, part, sid, value) {
     console.log(tid, part, sid, value);
-    console.log(global_state);
+    console.log(dzteeth.get_global_state());
 
-    localStorage.setItem("global_state", JSON.stringify(global_state));
+    localStorage.setItem(
+        "global_state",
+        JSON.stringify(dzteeth.get_global_state()),
+    );
 }
 
 self.onload = function () {
@@ -12,6 +15,9 @@ self.onload = function () {
     // if our database is empty we should create a new diagram state
     // else we just initialize our state from the database
     // if the state is null then it will create a new empty one
+    if (Object.keys(state).length === 0) {
+        state = null;
+    }
     dzteeth.init_global_state(state);
 
     // here we are setting up available options for tooth diagram and canal

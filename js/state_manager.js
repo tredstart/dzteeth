@@ -124,3 +124,7 @@ export function set_canal_color(color) {
 export function set_on_state_change(callback) {
     on_state_change = callback;
 }
+
+export function get_global_state() {
+    return global_state;
+}
